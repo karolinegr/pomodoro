@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro</title>
+    <link href="style.css" rel="stylesheet" />
+  </head>
+  <body>
+    
+    <div class="pomodoro-container">
+      <h1>Vamos começar?</h1>
+      <div id="counter">
+        <div class="counter-container"><span id="minutes">00</span><span>:</span><span id="seconds">00</span></div>
+      </div>
+      <div class="addButtons">
+        <button onclick="minutes05()">+5 min</button>
+        <button onclick="minutes15()">+15 min</button>
+        <button onclick="minutes25()">+25 min</button>
+      </div>
+      <div class="functionButtons">
+        <button id="pause" onclick="pauseCounter()">Pause</button>
+        <button id="start" onclick="startCounter()">Start</button>
+        <button id="reset" onclick="resetCounter()">Reset</button>
+      </div>
+    </div>
+
+    <script>
+      let minutes = 00;
+      let seconds = 00;
+      let counterInterval = undefined;
+
+      const minutesElem = document.getElementById("minutes");
+      const secondsElem = document.getElementById("seconds");
+
+      function updateCounterElem() {
+        minutesElem.innerHTML = minutes < 10 ? `0${minutes}` : minutes;
+        secondsElem.innerHTML = seconds < 10 ? `0${seconds}` : seconds;
+      }
+
+      function minutes05() {
+        minutes += 5;
+        updateCounterElem();
+      }
+      function minutes15() {
+        minutes += 15;
+        updateCounterElem();
+      }
+      function minutes25() {
+        minutes += 25;
+        updateCounterElem();
+      }
+
+      function startCounter() {
+        if (counterInterval) return;
+        counterInterval = setInterval(() => {
+          const timeOver = !seconds && !minutes;
+          const secondsOver = !seconds;
+          if (timeOver) return destroyInterval();
+          if (secondsOver) {
+            seconds = 59;
+            --minutes;
+            updateCounterElem();
+            return;
+          }
+          --seconds;
+          updateCounterElem();
+        }, 1000);
+      }
+
+      function pauseCounter() {
+        destroyInterval();
+      }
+
+      function destroyInterval() {
+        clearInterval(counterInterval);
+        counterInterval = undefined;
+      }
+
+      function resetCounter() {
+        destroyInterval();
+        minutes = 00;
+        seconds = 00;
+        updateCounterElem();
+      }
+    </script>
+  </body>
+</html>
